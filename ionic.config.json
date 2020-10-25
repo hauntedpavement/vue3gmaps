@@ -1,0 +1,7 @@
+{
+  "name": "vuemaps",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
