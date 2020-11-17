@@ -4,6 +4,8 @@ import router from './router';
 
 import { IonicVue } from '@ionic/vue';
 
+import { environment } from './environments/environment'
+
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
 
@@ -22,6 +24,12 @@ import '@ionic/vue/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+
+const script = document.createElement('script');
+script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsAPI}&libraries=places;`;
+script.setAttribute('defer', 'true');
+script.setAttribute('async', 'true');
+document.body.appendChild(script);
 
 const app = createApp(App)
   .use(IonicVue)
