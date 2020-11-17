@@ -22,6 +22,7 @@ import {
 } from "@ionic/vue";
 import { defineComponent, onMounted } from "vue";
 import { Plugins, GeolocationOptions } from "@capacitor/core";
+import Axios from "axios";
 
 declare const google: any;
 const { Geolocation } = Plugins; //capacitor object destructuring can b used since variable is same as API name. this will only use whatever plugins we need 
@@ -49,8 +50,13 @@ export default defineComponent({
       const { latitude, longitude } = pos.coords;
       initLocation = new google.maps.LatLng(latitude, longitude);
     }
+    const loadMapData = async () => {
+      const response = await Axios.get(`./../../public/assets/map-data/meatdata.geojson`);
+      console.log(response); 
+    }
     const initMap = async () => {
       await getCurrentLocation();
+      await loadMapData();
       map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
         center: initLocation,
         zoom: zoom,
@@ -64,12 +70,7 @@ export default defineComponent({
     onMounted( () => initMap());
 
     return {
-      IonContent,
-      IonHeader,
-      IonPage,
-      IonTitle,
-      IonToolbar,
-    }
+          }
   }
 });
 </script>
