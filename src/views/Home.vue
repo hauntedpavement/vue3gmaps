@@ -29,10 +29,11 @@ import {
   IonButtons,
 } from "@ionic/vue";
 import { filter } from "ionicons/icons";
-import { defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import { Plugins, GeolocationOptions } from "@capacitor/core";
 import FilterPopover from "@/components/FilterPopover.vue";
 import { popoverController } from "@ionic/core";
+import { locationdata } from "@/data/locationdata";
 
 declare const google: any;
 const { Geolocation } = Plugins; //capacitor object destructuring can b used since variable is same as API name. this will only use whatever plugins we need
@@ -59,6 +60,9 @@ export default defineComponent({
     const geolocationOpts: GeolocationOptions = {
       enableHighAccuracy: true,
     };
+    //importing plant names and locations from geojson to array
+    const plantdata = ref(locationdata.features);
+
     const getCurrentLocation = async () => {
       const pos = await Geolocation.getCurrentPosition(geolocationOpts);
       const { latitude, longitude } = pos.coords;
@@ -80,8 +84,19 @@ export default defineComponent({
       });
       await popover.present();
     };
+    const initPlantData = () => {
+      const pointData = ref(plantdata.value.map(({id, properties, geometry}) => geometry.coordinates));
+      console.log(pointData.value[0]);
+    }
     const initMap = async () => {
       await getCurrentLocation();
+
+      //can reference directly in tempate, but when using in setup need to references its value. 
+      //since u wrap in reference, have to explicity note that it is ref.
+
+      console.log(plantdata.value[0]);
+      initPlantData();
+
       map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
         center: initLocation,
         zoom: zoom,
